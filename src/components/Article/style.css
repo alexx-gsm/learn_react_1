@@ -1,0 +1,9 @@
+.item-enter {
+    position: relative;
+    bottom: 100%;
+    opacity: 0;
+}
+.item-enter-active {
+    opacity: 1;
+    transition: all 300ms ease-in-out;
+}
