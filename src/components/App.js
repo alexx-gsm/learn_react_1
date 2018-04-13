@@ -1,17 +1,22 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux'
 import logo from '../logo.svg';
 import './App.css';
 import './ArticleList'
-import {articles} from './fixtures'
 import ArticleList from "./ArticleList";
 import Filters from './Filters'
-import ArticlesChart from './ArticlesChart';
 import Counter from './Counter'
 
 import './App.css';
 
 class App extends Component {
   render() {
+    const { articles, filters } = this.props
+
+    const filteredArticles = this.getFilteredArticles()
+    console.log('filtered', filteredArticles)
+    
+
     return (
       <div className="App">
         <header className="App-header">
@@ -21,13 +26,24 @@ class App extends Component {
         <main>
             <Counter />
             <hr/>
-            <Filters articles = {articles} />
-            <ArticleList articles = {articles} />
-            <ArticlesChart articles = {articles} />
+            <Filters />
+            <ArticleList articles = {filteredArticles.length > 0 ? filteredArticles : articles} />
         </main>
       </div>
     );
   }
+
+  getSelectedArticleIds = (selectedFilter=[]) => selectedFilter.map(filter => filter.value)
+
+  getFilteredArticles = () => {
+    const { articles, filters } = this.props
+    
+    return articles.filter(article => (
+      this.getSelectedArticleIds(filters.selected).includes(article.id))
+    )
+  }
 }
 
-export default App;
+export default connect(
+  ({articles, filters}) => ({articles, filters})
+)(App);

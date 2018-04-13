@@ -5,13 +5,14 @@ import CommentList from '../CommentList';
 import './style.css';
 
 function Article(props)  {
-    const {title, toggleOpen, isOpen} = props;
+    const {title, toggleOpen, isOpen, clickDelete} = props;
     return (
         <article className='article'>
             <h1
                 className='article__title'
                 onClick={toggleOpen}>
                 {title}
+                <button onClick={clickDelete}>Delete</button>
             </h1>
             <CSSTransition
                 in={isOpen}
@@ -43,7 +44,8 @@ function getBody({ text, comments }) {
 Article.propTypes = {
     title: PropTypes.string,
     text: PropTypes.string,
-    comments: PropTypes.array
+    comments: PropTypes.array,
+    clickDelete: PropTypes.func
 };
 
 export default Article;
