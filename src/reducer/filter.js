@@ -1,25 +1,33 @@
-import { FILTER_SELECT, FILTER_DATE_RANGE } from '../constants'
-import { Z_VERSION_ERROR } from 'zlib';
+import { FILTER_SELECT, FILTER_DATE_RANGE, ARTICLE_DELETE } from '../constants'
 
-const dateRange = {
-    from: null,
-    to: null
+const defaultFilters = {
+    selected: [],
+    dateRange: {
+        from: null,
+        to: null
+    }
 }
 
-export default (state = {dateRange}, action) => {
+export default (filters = defaultFilters, action) => {
     const { type, payload } = action
+    
     switch (type) {
         case FILTER_SELECT:
             return {
-                ...state,
-                ...payload.selected
+                ...filters,
+                selected: payload.selected
             }
         case FILTER_DATE_RANGE:
             return {
-                ...state,
-                ...payload.dateRange
+                ...filters,
+                dateRange: payload.dateRange
+            }
+        case ARTICLE_DELETE:
+            return {
+                ...filters,
+                selected: filters.selected.filter(id => id !== payload.id)
             }
         default:
-            return state
+            return filters
     }
 };

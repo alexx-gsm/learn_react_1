@@ -1,19 +1,22 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { CSSTransition } from 'react-transition-group';
-import CommentList from '../CommentList';
-import './style.css';
+import React from 'react'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
+import { articleDelete } from '../../AC'
+import { CSSTransition } from 'react-transition-group'
+import CommentList from '../CommentList'
+import './style.css'
 
 function Article(props)  {
-    const {title, toggleOpen, isOpen, clickDelete} = props;
+    const {title, date, toggleOpen, isOpen, id} = props;
     return (
         <article className='article'>
             <h1
                 className='article__title'
                 onClick={toggleOpen}>
                 {title}
-                <button onClick={clickDelete}>Delete</button>
+                <button onClick={handleDelete(props)}>Delete</button>
             </h1>
+            <small>{date}</small>
             <CSSTransition
                 in={isOpen}
                 timeout={{
@@ -26,7 +29,13 @@ function Article(props)  {
                 {getBody(props)}
             </CSSTransition>
         </article>
-    );
+    )
+}
+
+function handleDelete({ id, articleDelete }) {
+    return function () {
+        articleDelete(id)
+    }
 }
 
 function getBody({ text, comments }) {
@@ -38,7 +47,7 @@ function getBody({ text, comments }) {
                 <CommentList comments={comments}/>
             </div>
         </div>
-    );
+    )
 }
 
 Article.propTypes = {
@@ -46,6 +55,8 @@ Article.propTypes = {
     text: PropTypes.string,
     comments: PropTypes.array,
     clickDelete: PropTypes.func
-};
+}
 
-export default Article;
+export default connect(
+    null, { articleDelete }
+)(Article)

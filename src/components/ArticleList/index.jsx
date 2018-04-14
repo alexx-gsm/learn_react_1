@@ -3,29 +3,26 @@ import { connect } from 'react-redux'
 import Article from '../Article'
 import PropTypes from 'prop-types'
 import accordion from '../../decorators/accordion'
-import { articleDelete } from '../../AC'
+import { filtratedArticlesSelector } from '../../selectors'
 
 class ArticlesList extends Component {
     render() {
-        const {articles, toggleOpenItem, openItemId, articleDelete} = this.props
+        const {articles, toggleOpenItem, openItemId } = this.props
         const articleElements = articles.map(article => (
             <li key = {article.id}>
                 <Article
                     {...article}
                     isOpen = {article.id === openItemId}
                     toggleOpen = {toggleOpenItem(article.id)}
-                    clickDelete = { this.handleDelete(article.id) }
                 />
             </li>
         ))
         return (
-            <ul ref = {this.setContainerRef} >
+            <ul>
                 {articleElements}
             </ul>
         )
     }
-
-    handleDelete = id => () => this.props.articleDelete(id)
 }
 
 ArticlesList.propTypes = {
@@ -35,7 +32,5 @@ ArticlesList.propTypes = {
     toggleOpenItem: PropTypes.func.isRequired
 };
 
-export default connect(
-    null,
-    { articleDelete }
+export default connect( state => ({ articles: filtratedArticlesSelector(state) })
 )(accordion(ArticlesList))

@@ -6,39 +6,29 @@ import { filterDateRange } from '../../AC'
 import 'react-day-picker/lib/style.css'
 
 class DateRange extends Component {
-    state = {
-        from: null,
-        to: null
-    }
 
     render() {
-        const { filters, filterDateRange } = this.props
-
-        console.log(filters);
-        
-        const range = {
-            from: filters.dateRange.from,
-            to: filters.dateRange.to
-        }
-        const selectedRange = range.from && range.to && `${range.from.toDateString()} - ${range.to.toDateString()}`
+        const { from, to } = this.props.range
+        const selectedRange = from && to && `${from.toDateString()} - ${to.toDateString()}`
         
         return (
             <div className="date-range">
                 <DayPicker
-                    selectedDays={ day => DateUtils.isDayInRange(day, range) }
-                    onDayClick={ this.handleDayClick(range) }
+                    selectedDays={ day => DateUtils.isDayInRange(day, { from, to }) }
+                    onDayClick={ this.handleDayClick }
                 />
                 {selectedRange}
             </div>
         )
     }
 
-    handleDayClick = range => day => {
-        this.props.filterDateRange({dateRange: DateUtils.addDayToRange(day, range)})
+    handleDayClick = day => {
+        const { range, filterDateRange } = this.props
+        filterDateRange(DateUtils.addDayToRange(day, range))
     }
 }
 
-export default connect(
-    ({filters}) => ({filters}),
-    { filterDateRange }
+export default connect(state => ({
+    range: state.filters.dateRange
+}), { filterDateRange }
 )(DateRange)

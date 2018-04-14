@@ -32,9 +32,9 @@ function CommentList(props) {
 }
 
 function getBody({comments}) {
-    const commentElements = comments.map( item => (
-        <li key={item.id}>
-            <Comment {...item}/>
+    const commentElements = comments.map( id => (
+        <li key={id}>
+            <Comment id={id}/>
         </li>
     ));
 
